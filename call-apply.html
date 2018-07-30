@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>理解call和apply 及arguments.callee</title>
+</head>
+<body>
+<!--<script>-->
+ <!--var yunxi=function(a,b){-->
+     <!--console.log([a,b]);-->
+     <!--console.log(this===window);-->
+ <!--};-->
+ <!--yunxi.apply(null,[1,2]);-->
+<!--</script>-->
+<!--<script>-->
+    <!--var yunxi=function(a,b){-->
+        <!--console.log([a,b]);-->
+        <!--console.log(this===window);-->
+    <!--};-->
+    <!--yunxi.call(null,1,2);-->
+<!--</script>-->
+<script>
+    var longen={
+        name:'yunxi'
+    };
+    var longen2={
+        name:'我叫涂根华'
+    }
+    var name="我是来测试的";
+    var getName=function(){
+        return this.name;
+    };
+    console.log(getName());
+    console.log(getName.call(longen));
+    console.log(getName.call(longen2));
+//    第一次调用 getName()方法，因为它是普通函数调用，所以它的this指向与window，因此打印出全局对象的name的值；
+
+//   第二次调用getName.call(longen); 执行这句代码后，getName这个方法的内部指针this指向于longen这个对象了，因此打印this.name实际上是longen.name，因此返回的是name=”yunxi”;
+
+//    但是this指针也有列外的情况，比如一个点击元素，当我们点击一个元素的时候，this指针就指向与那个点击元素，但是当我们在内部再包含一个函数后，在函数内再继续调用this的话，那么现在的this指针就指向了window了；比如如下代码：
+//    document.getElementById("longen").onclick = function(){
+//        console.log(this); // this 就指向于div元素对象了
+//        var func = function(){
+//            console.log(this); // 打印出window对象
+//        }
+//        func();
+//    }
+//    如上代码。可以看到外部this指向与被点击的那个元素，内部普通函数调用，this指针都是指向于window对象。但是我们可以使用call或者apply方法来改变this的指针的；如下代码：
+//    document.getElementById("longen").onclick = function(){
+//        console.log(this); // this 就指向于div元素对象了
+//        var func = function(){
+//            console.log(this); // 就指向于div元素对象了
+//        }
+//        func.call(this);
+//    }
+//    如上代码我们使用call方法调用func函数，使this指向与func这个对象了，当然上面的方法我们还可以不使用call或者apply方法来改变this的指针，我们可以在外部先使用一个变量来保存this的指针，在内部调用的时候我们可以使用哪个变量即可，如下代码演示：
+//    document.getElementById("longen").onclick = function(){
+//        console.log(this); // this 就指向于div元素对象了
+//        var self = this;
+//        var func = function(){
+//            console.log(self); // 就指向于div元素对象了
+//        }
+//        func();
+//    }
+//    简单的来说就是当前执行环境的函数被调用时候，arguments.callee对象会指向与自身，就是当前的那个函数的引用；
+//    arguments.callee()的含义是调用当前正在执行的函数自身，比如上面的test的匿名函数；
+//    var count=1;
+//    var test=function(){
+//        console.log(count +"--"+(test.length==arguments.callee.length))
+//        if(count++<3){
+//            //调用test()函数自身
+//            arguments.callee();
+//        }
+//    };
+//    test();
+//    Function.prototype.bind介绍
+
+//    目前很多高级浏览器都支持Function.prototype.bind方法，该方法用来指定函数内部的this指向。
+//    Function.prototype.bind=function(context){
+//        var self=this;
+//        return function(){
+//            return self.apply(context,arguments);
+//        }
+//    }
+//    var yunxi={
+//        name:'yunxi'
+//    };
+//    var func=function(){
+//        console.log(this.name)
+//    }.bind(yunxi);
+//    func();
+    //apply和call继承
+    var Yunxi=function(name){
+        this.name=name;
+    };
+    var Longen=function(){
+        Yunxi.apply(this,arguments);
+    };
+    Longen.prototype.getName=function(){
+        return this.name;
+    };
+    var longen=new Longen("tugenhua");
+    console.log(longen.getName());
+
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>推荐分支函数(解决兼容问题的更好的方法)</title>
+</head>
+<body>
+分支函数的作用是：可以解决兼容问题if或者else的重复判断的问题，我们一般的做法是：根据兼容的不同写if，else等，这些判断来实现兼容，但是这样明显就有一个缺点，每次执行这个函数的时候，都需要进行if和else的检测，效率明显不高，我们现在使用分支函数来实现当初始化的时候进行一些检测，在之后的运行代码过程中，代码就无需检测了；
+<script>
+    // 我们先来看看传统的封装ajax请求的函数
+    //创建XMLHttpRequest对象：
+    var xmlhttp;
+    function createxmlhttp(){
+        if(windo.XMLHttpRequest){
+            xmlhttp=new XMLHttpRequest();
+        }else{
+           xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+    }
+    //下面看看分支函数代码如下:
+    var XHR=(function(){
+        var standard={
+            createXHR:function(){
+                return new XMLHttpRequest();
+            }
+        };
+        var oldActionXObject={
+            createXHR:function(){
+                return new ActiveXObject("Microsoft.XMLHTTP");
+            }
+        }
+        var newActionXObject={
+            createXHR:function(){
+                return new ActiveXObject("Msxml2.XMLHTTP");
+            }
+        };
+        if(standard.createXHR){
+            return standard;
+        }else{
+            try{
+                newActionXObject.createXHR();
+                return newActionXObject;
+            }catch(e){
+                oldActionXObject.createXHR();
+                return oldActionXObject;
+            }
+        }
+    })();
+    console.log(XHR.createXHR());//xmlHttpRequest对象
+//    面的代码就是分支函数，分支的原理是：声明几个不同名称的对象，且为该不同名称对象声明一个相同的方法，然后根据不同的浏览器设计来实现，接着开始进行浏览器检测，并且根据浏览器检测来返回哪一个对象，不论返回的是哪一个对象，最后它一致对外的接口都是createXHR方法的；
+</script>
+</body>
+</html>

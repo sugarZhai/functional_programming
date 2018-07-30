@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IO</title>
+</head>
+<body>
+<!--IO 跟前面那几个 Functor 不同的地方在于，它的 __value 是一个函数。它把不纯的操作（比如 IO、网络请求、DOM）包裹到一个函数内，从而延迟这个操作的执行。所以我们认为，IO 包含的是被包裹的操作的返回值。
+
+-->
+<script>
+    import _from 'lodash';
+    var compose=_.flowRight;
+    var IO=function(f){
+        this.__value=f;
+    }
+    IO.of=x=>new IO(_=>x);
+    IO.prototype.map=function(f){
+        return new IO(compose(f,this.__value))
+    };
+</script>
+</body>
+</html>

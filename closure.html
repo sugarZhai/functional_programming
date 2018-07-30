@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>闭包</title>
+</head>
+<body>
+<script>
+//    function f(x){
+//        var a=x;
+//        var b=function(){
+//            return a;
+//        };
+//        a++;
+//        return b;
+//    }
+//    var c=f(5);
+//    console.log(c());
+    //代码一
+//    function f(x){
+//        var arrs=[];
+//        for(var i=0;i<x.length;i++){
+//            var temp=x[i];
+//            arrs.push(function(){
+//                console.log(temp+''+x[i]);
+//            });
+//        }
+//        return arrs;
+//    }
+//    function e(){
+//        var ar=f(["a","b","c"]);
+//        for(var i=0,ilen=ar.length;i<ilen;i++){
+//            ar[i]();
+//        }
+//    }
+//    e();
+    //代码二:
+    function f2(x){
+        var arrs=[];
+        for(var i=0;i<x.length;i++){
+            var temp=x[i];
+            (function(temp,i){
+                arrs.push(function(){
+                    console.log(temp+''+x[i]);
+                });
+            })(temp,i);
+        }
+        return arrs;
+    }
+    function e2(){
+        var ar=f2(["a","b","c"]);
+        for(var i=0,ilen=ar.length;i<ilen;i++){
+            ar[i]();
+        }
+    }
+    e2();
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>容器、Functor</title>
+</head>
+<body>
+<!--如果你熟悉 jQuery 的话，应该还记得，$(...) 返回的对象并不是一个原生的 DOM 对象，而是对于原生对象的一种封装：-->
+
+<!--var foo = $('#foo');-->
+<!--foo == document.getElementById('foo');-->
+<!--//=> false-->
+
+<!--foo[0] == document.getElementById('foo');-->
+<!--//=> true-->
+<!--容器为函数式编程里普通的变量、对象、函数提供了一层极其强大的外衣，赋予了它们一些很惊艳的特性，就好像 Tony Stark 的钢铁外衣，Dva 的机甲，明日香的2号机一样。-->
+<script>
+    var Container=function(x){
+        this.__value=x;
+    }
+    Container.of=x=>new Container(x);
+//    //试试看
+//    Container.of(1);
+//    console.log(Container.of(1))
+//    Container.of('abcd');
+//    console.log(Container.of('abcd'))
+//    我们调用 Container.of 把东西装进容器里之后，由于这一层外壳的阻挡，普通的函数就对他们不再起作用了，所以我们需要加一个接口来让外部的函数也能作用到容器里面的值：
+Container.prototype.map=function(f){
+        return Container.of(f(this.__value))
+}
+Container.of(3)
+    .map(x=>x+1)
+    .map(x=>'Result is '+x);
+console.log(Container.of(3)
+    .map(x=>x+1)
+    .map(x=>'Result is '+x))
+</script>
+<!--Functor（函子）是实现了 map 并遵守一些特定规则的容器类型。
+
+也就是说，如果我们要将普通函数应用到一个被容器包裹的值，那么我们首先需要定义一个叫 Functor 的数据类型，在这个数据类型中需要定义如何使用 map 来应用这个普通函数。
+
+把东西装进一个容器，只留出一个接口 map 给容器外的函数，这么做有什么好处呢？
+
+本质上，Functor 是一个对于函数调用的抽象，我们赋予容器自己去调用函数的能力。当 map 一个函数时，我们让容器自己来运行这个函数，这样容器就可以自由地选择何时何地如何操作这个函数，以致于拥有惰性求值、错误处理、异步调用等等非常牛掰的特性。
+
+举个例子，我们现在为 map 函数添加一个检查空值的特性，这个新的容器我们称之为 -->
+<script>
+//    var Maybe=function(x){
+//        this.__value=x;
+//    }
+//    Maybe.of=function(x){
+//        return new Maybe(x);
+//    }
+//    Maybe.prototype.map=function(f){
+//        return this.isNothing()?Maybe.of(null):Maybe.of(f(this.__value));
+//    }
+//    Maybe.prototype.isNothing=function(){
+//        return (this.__value===null || this.__value===undefined);
+//    }
+    //试试看
+    import _ from 'lodash';
+    var add = _.curry(_.add);
+
+    Maybe.of({name: "Stark"})
+        .map(_.prop("age"))
+        .map(add(10));
+    //=> Maybe(null)
+
+    Maybe.of({name: "Stark", age: 21})
+        .map(_.prop("age"))
+        .map(add(10));
+    //=> Maybe(31)
+    console.log(Maybe.of({name: "Stark", age: 21})
+        .map(_.prop("age"))
+        .map(add(10)))
+//    看了这些代码，觉得链式调用总是要输入一堆 .map(...) 很烦对吧？这个问题很好解决，还记得我们上一篇文章里介绍的柯里化吗？
+import _ from 'lodash';
+    var compose=_.flowRight;
+    var add=_.curry(_.add);
+    //创造一个柯里化
+    var map=_.curry((f,functor)=>functor.map(f));
+    var doEverything=map(compose(add(10),_.property("age")));
+    var functor=Maybe.of({name:"Stark",age:21});
+    doEverything(functor);
+    console.log(doEverything(functor))
+</script>
+</body>
+</html>

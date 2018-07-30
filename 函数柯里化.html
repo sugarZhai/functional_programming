@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>函数的柯里化</title>
+</head>
+<body>
+函数柯里化（curry）的定义很简单：传递给函数一部分参数来调用它，让它返回一个函数去处理剩下的参数。
+<script>
+//    比如对于加法函数 var add = (x, y) =>　x + y ，我们可以这样进行柯里化：
+
+    //比较容易读懂的ES5写法
+    var add = function(x){
+        return function(y){
+            return x + y
+        }
+    }
+
+    //ES6写法，也是比较正统的函数式写法
+    var add = x => (y => x + y);
+
+    //试试看
+    var add2 = add(2);
+    var add200 = add(200);
+
+    add2(2); // =>4
+    add200(50); // =>250
+
+</script>
+<script>
+//    还记得上面那个 checkage 的函数吗？我们可以这样柯里化它：
+
+var checkage = min => (age => age > min);
+    var checkage18 = checkage(18);
+    checkage18(20);
+    // =>true
+</script>
+<!--事实上柯里化是一种“预加载”函数的方法，通过传递较少的参数，得到一个已经记住了这些参数的新函数，某种意义上讲，这是一种对参数的“缓存”，是一种非常高效的编写函数的方法-->
+<script>
+    import { curry } from 'lodash';
+
+    //首先柯里化两个纯函数
+    var match = curry((reg, str) => str.match(reg));
+    var filter = curry((f, arr) => arr.filter(f));
+
+    //判断字符串里有没有空格
+    var haveSpace = match(/\s+/g);
+
+    haveSpace("ffffffff");
+    //=>null
+
+    haveSpace("a b");
+    //=>[" "]
+
+    filter(haveSpace, ["abcdefg", "Hello World"]);
+    //=>["Hello world"]
+</script>
+</body>
+</html>

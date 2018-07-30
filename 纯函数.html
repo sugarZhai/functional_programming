@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>纯函数</title>
+</head>
+<body>
+<!--纯函数的定义是，对于相同的输入，永远会得到相同的输出，而且没有任何可观察的副作用，也不依赖外部环境的状态。-->
+<script>
+    var arr = [1,2,3,4,5];
+
+    // Array.slice是纯函数，因为它没有副作用，对于固定的输入，输出总是固定的
+    // 可以，这很函数式
+    xs.slice(0,3);
+    //=> [1,2,3]
+    xs.slice(0,3);
+    //=> [1,2,3]
+
+    // Array.splice是不纯的，它有副作用，对于固定的输入，输出不是固定的
+    // 这不函数式
+    xs.splice(0,3);
+    //=> [1,2,3]
+    xs.splice(0,3);
+    //=> [4,5]
+    xs.splice(0,3);
+    //=> []
+    //不纯的
+    var min = 18;
+    var checkage = age => age > min;
+
+    //纯的，这很函数式
+    var checkage = age => age > 18;
+//    在不纯的版本中，checkage 这个函数的行为不仅取决于输入的参数 age，还取决于一个外部的变量 min，换句话说，这个函数的行为需要由外部的系统环境决定。对于大型系统来说，这种对于外部状态的依赖是造成系统复杂性大大提高的主要原因。
+//    纯函数不仅可以有效降低系统的复杂度，还有很多很棒的特性，比如可缓存性
+    import _ from 'lodash';
+    var sin = _.memorize(x => Math.sin(x));
+
+    //第一次计算的时候会稍慢一点
+    var a = sin(1);
+
+    //第二次有了缓存，速度极快
+    var b = sin(1);
+
+</script>
+</body>
+</html>

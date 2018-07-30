@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>理解使用模块模式编写代码</title>
+</head>
+<body>
+<script>
+//    Function.prototype.method = function(name,func) {
+//        if(!this.prototype[name]) {
+//            this.prototype[name] = func;
+//            return this;
+//        }
+//    }
+//    String.method('deentityify',function(){
+//        var entity = {
+//            quot: '"',
+//            It: '<',
+//            gt: '>'
+//        };
+//        return function(){
+//            return this.replace(/&([^&;]+);/g,function(a,b){
+//                var r = entity[b];
+//                return typeof r === 'string' ? r : a;
+//            });
+//        }
+//    }());
+//    console.log("&It;&quot;&gt;".deentityify()); // <">
+//    模块开发的一般形式是：定义了私有变量和函数的函数，利用闭包创建可以访问到的私有变量和函数的特权函数，最后返回这个特权函数，或把他们保存到可以访问的地方。
+var MODULE=(function(){
+    var name="tugenhua";
+    var obj={
+        setName:function(){
+            this.name=name;
+        },
+        getName:function(){
+            return this.name;
+        }
+    };
+    return obj;
+})();
+MODULE.setName()
+console.log(MODULE.getName());
+</script>
+</body>
+</html>

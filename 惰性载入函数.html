@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>惰性载入函数（也是解决兼容问题的）</title>
+</head>
+<body>
+代码也可以按照上面的推荐分支风格编码的；解决的问题也是解决多个if条件判断的；代码如下：
+<script>
+    var addEvent=function(el,type,handler){
+        addEvent=el.addEventListener ? function(el,type,handler){
+            el.addEventListener(type,handler,false);
+        } : function(el,type,handler){
+            el.attachEvent("on"+type,handler);
+        }
+        addEvent(el,type,handler);
+    };
+//    惰性载入函数也是在函数内部改变自身的一种方式，在重复执行的时候就不会再进行检测的；惰性载入函数的分支只会执行一次，即第一次调用的时候，其优点如下：
+
+// 1. 要执行的适当代码只有在实际调用函数时才执行。
+
+// 2. 第一次调用该函数的时候，紧接着内部函数也会执行，但是正因为这个，所以后续继续调用该函数的话，后续的调用速度会很快；因此避免了多重条件
+</script>
+</body>
+</html>

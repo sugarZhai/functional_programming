@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Point Free</title>
+</head>
+<body>
+<script>
+    var map=(f,arr)=>arr.map(f);
+    var toUpperCase=word=>word.toUpperCase();
+//    用中文解释的话大概就是，不要命名转瞬即逝的中间变量，比如：
+    var f = str => str.toUpperCase().split(' ');
+//    这个函数中，我们使用了 str 作为我们的中间变量，但这个中间变量除了让代码变得长了一点以外是毫无意义的。下面改造一下这段代码：
+    var compose=(f,g)=>(x=>f(g(x)));
+    var toUpperCase=word=>word.toUpperCase();
+var split=x=>(str=>str.split(x));
+
+var f=compose(split(' '),toUpperCase);
+f("abcd efgh");
+console.log(f("abcd efgh"))
+</script>
+</body>
+</html>

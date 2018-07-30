@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>理解惰性实例化</title>
+</head>
+<body>
+在页面中javascript初始化执行的时候就实例化类，如果在页面中没有使用这个实列化的对象，就会造成一定的内存浪费和性能损耗；这时候，我们可以使用惰性实列化来解决这个问题，惰性就是把实列化推迟到需要使用它的时候才去做，做到 "按需供应";
+<script>
+    // 惰性实列化代码如下
+    var myNamespace = function(){
+        var Configure = function(){
+            var privateName = "tugenhua";
+            var privateGetName = function(){
+                return privateName;
+            };
+            var privateSetName = function(name) {
+                privateName = name;
+            };
+            // 返回单列对象
+            return {
+                setName: function(name) {
+                    privateSetName(name);
+                },
+                getName: function(){
+                    return privateGetName();
+                }
+            }
+        };
+        // 存储Configure实列
+        var instance;
+        return {
+            init: function(){
+                // 如果不存在实列，就创建单列实列
+                if(!instance) {
+                    instance = Configure();
+                }
+                // 创建Configure单列
+                for(var key in instance) {
+                    if(instance.hasOwnProperty(key)) {
+                        this[key] = instance[key];
+                    }
+                }
+                this.init = null;
+                return this;
+            }
+        }
+    }();
+    // 调用方式
+    myNamespace.init();
+    var name = myNamespace.getName();
+    console.log(name); // tugenhua
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>错误处理、Either</title>
+</head>
+<body>
+<script>
+    //这里是一样的
+    var Left=function(x){
+        this.__value=x;
+    }
+    var Right=function(x){
+        this.__value=x;
+    }
+    //这里也是一样的
+    Left.of=function(x){
+        return new Left(x);
+    }
+    Right.of=function(x){
+        return new Right(x);
+    }
+    //这里不同！！！
+    Left.prototype.map=function(f){
+        return this;
+    }
+    Right.prototype.map=function(f){
+        return Right.of(f(this.__value));
+    }
+    //下面来看看Left和Right的区别吧
+    Right.of("Hello").map(str=>str+"world!");
+    Left.of("Hello").map(str=>str+"World!");
+    console.log(Right.of("Hello").map(str=>str+"world!"))
+    console.log(Left.of("Hello").map(str=>str+"World!"))
+
+
+    var getAge=user=>user.age?Right.of(user.age):Left.of("ERROR!");
+
+    //试试
+    getAge({name:'stark',age:'21'}).map(age=>'Age is'+age)
+    console.log(getAge({name:'stark',age:'21'}).map(age=>'Age is'+age))
+    getAge({name:'stark'}).map(age=>'Age is '+age);
+    console.log(getAge({name:'stark'}).map(age=>'Age is '+age))
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>理解js中的链式调用</title>
+</head>
+<body>
+<script>
+    // 定义一个简单的对象，每次调用对象的方法的时候，该方法都返回该对象自身
+    var obj = {
+        a: function(){
+            console.log("输出a");
+            return this;
+        },
+        b:function(){
+            console.log("输出b");
+            return this;
+        }
+    };
+    console.log(obj.a().b()); // 输出a 输出b 输出this指向与obj这个对象
+    // 下面我们再看下 上面的通过Function扩展类型添加方法的demo如下：
+    Function.prototype.method = function(name,func) {
+        if(!this.prototype[name]) {
+            this.prototype[name] = func;
+            return this;
+        }
+    }
+
+    String.method('trim',function(){
+        return this.replace(/^\s+|\s+$/g,'');
+    });
+    String.method('log2',function(){
+        console.log("链式调用");
+        return this;
+    });
+    String.method('r',function(){
+        return this.replace(/a/,'');
+    });
+    var str = " abc ";
+    console.log(str.trim().log2().r()); // 输出链式调用和 bc
+</script>
+</body>
+</html>

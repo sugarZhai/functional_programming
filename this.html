@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>javascript中的this详解</title>
+</head>
+<div>
+    this的指向常见的有如下几点需要常用到：
+    全局对象的this是指向与window；
+    作为普通函数调用。
+    作为对象方法调用。
+    构造器调用。
+    Function.prototype.call 或 Function.prototype.apply调用。
+</div>
+<body>
+<script>
+    //1全局对象的this
+//    console.log(this); // this指向于window
+////    setTimeout() 和 setInterval()函数内部的this指针是指向于window的，如下代码：
+// function test(){
+//     console.log(11);
+// }
+//    setTimeout(function(){
+//        console.log(this === window); // true
+//        this.test(); // 11
+//    });
+    //2、作为普通函数调用
+//    var name = "longen";
+//    function test(){
+//        return this.name;
+//    }
+//    console.log(test()); // longen
+////    3. 作为对象的方法调用。
+//    var obj = {
+//        "name": "我的花名改为云溪了，就是为了好玩",
+//        getName: function(){
+//            console.log(this); // 在这里this指向于obj对象了
+//            console.log(this.name); // 打印 我的花名改为云溪了，就是为了好玩
+//        }
+//    };
+//    obj.getName(); // 对象方法调用
+////    4. 构造器调用
+//    var Obj = function(){
+//        this.name = "yunxi";
+//    };
+//    var test = new Obj();
+//    console.log(test.name); // yunxi
+//    构造器函数第一个字母需要大写，这是为了区分普通函数还是构造器函数而言；
+//    但是也有例外的情况，比如构造器显示地返回了一个对象的话，那么这次继续调用的话，那么会最终会返回这个对象，比如如下代码：
+    var obj=function(){
+        this.name="yunxi";
+        return {
+            "age":"27"
+        }
+    };
+    var test=new obj();
+    console.log(test.name);
+</script>
+</body>
+</html>

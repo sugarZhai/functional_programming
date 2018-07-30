@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>理解函数引用和函数调用的区别</title>
+</head>
+<body>
+<script>
+    // 函数引用 代码一
+    function f(){
+        var x = 5;
+        return x;
+    }
+    var a = f;
+    var b = f;
+
+    console.log(a===b); // true
+    // 函数调用 代码二
+    function f2() {
+        var x = 5;
+        return x;
+    }
+    var a2 = f2();
+    var b2 = f2();
+    console.log(a2 === b2);//true
+
+    // 函数调用 代码三
+    function f3(){
+        var x = 5;
+        return function(){
+            return x;
+        }
+    }
+    var a3 = f3();
+    var b3 = f3();
+    console.log(a3 === b3); // false
+//    我们现在来理解下函数引用和函数调用的本质区别：当引用函数时候，多个变量内存存储的是函数的相同的入口指针，因此对于同一个函数来讲，无论多少个变量引用，他们都是相等的，因为对于引用类型(对象，数组，函数等)都是比较的是内存地址，如果他们内存地址一样的话，说明是相同的；但是对于函数调用来讲，比如代码三;每次调用的时候，都被分配一个新的内存地址，所以他们的内存地址不相同，因此他们会返回false，但是对于代码二来讲，我们看到他们没有返回函数，只是返回数值，他们比较的不是内存地址，而是比较值，所以他们的值相等，因此他们也返回true，我们也可以看看如下实列化一个对象的列子，他们也被分配到不同的内存地址，因此他们也是返回false的；如下代码测试：
+    function F(){
+        this.x = 5;
+    }
+    var a = new F();
+    var b = new F();
+    console.log(a === b); // false
+
+</script>
+</body>
+</html>

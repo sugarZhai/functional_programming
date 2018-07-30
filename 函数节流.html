@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>函数节流</title>
+</head>
+<body>
+DOM操作的交互需要更多的内存和CPU时间，连续进行过多的DOM相关的操作可能会导致浏览器变慢甚至崩溃，函数节流的设计思想是让某些代码可以在间断的情况下连续重复执行，实现该方法可以使用定时器对该函数进行节流操作;
+
+比如：第一次调用函数的时候，创建一个定时器，在指定的时间间隔下执行代码。当第二次执行的时候，清除前一次的定时器并设置另一个，将其替换成一个新的定时器;
+<script>
+    //如下简单函数节流代码演示
+    var throttle={
+        timeoutId:null,
+        //需要执行的方法
+        preformMethod:function(){
+
+        },
+        //初始化需要调用的方法
+        process:function(){
+            clearTimeout(this.timeoutId);
+            var self=this;
+            self.timeoutId=setTimeout(function(){
+                self.preformMethod();
+            },100);
+        }
+    };
+    //执行操作
+    throttle.process();
+//    函数节流解决的问题是一些代码(比如事件)无间断的执行，这可能会影响浏览器的性能，比如浏览器变慢或者直接崩溃。比如对于mouseover事件或者click事件，比如点击tab项菜单，无限的点击，有可能会导致浏览器会变慢操作，这时候我们可以使用函数节流的操作来解决；
+</script>
+</body>
+</html>
